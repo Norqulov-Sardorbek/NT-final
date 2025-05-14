@@ -3,7 +3,6 @@ from django.utils.html import format_html
 from .models import *
 from django.urls import reverse
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
-from click_up.models import ClickTransaction
 from django.contrib.auth.models import Group
 
 admin.site.site_header = 'E-Commerce Admin'
@@ -73,7 +72,3 @@ admin.site.register(Category)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(Order, OrderAdmin)
 
-admin.site.unregister(Group)
-admin.site.unregister(BlacklistedToken)
-admin.site.unregister(OutstandingToken)
-admin.site.unregister(ClickTransaction)

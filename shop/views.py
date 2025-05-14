@@ -22,6 +22,12 @@ class ProductListAPIView(generics.ListAPIView):
             queryset = queryset.filter(category_id=category_id)
         return queryset
 
+class CreateProductAPIView(generics.CreateAPIView):
+    serializer_class = ProductsSerializer
+    queryset = Products.objects.all()
+class CreateCategoryAPIView(generics.CreateAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
 
 class ProductDetailsAPIView(generics.RetrieveAPIView):
     serializer_class = ProductsSerializer
@@ -91,7 +97,26 @@ class OrderCreateAPIView(generics.CreateAPIView):
         result = {"order": serializer.data}
         return Response(result, status=status.HTTP_201_CREATED)
 
+class UpdateProductAPIView(generics.UpdateAPIView):
+    serializer_class = ProductsSerializer
+    permission_classes = [IsAuthenticated]
+    def put(self, request, *args, **kwargs):
+        product_id = self.kwargs.get("product_id")
+        product = get_object_or_404(Products, id=product_id)
+        serializer = self.serializer_class(product, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        result = {"product": serializer.data}
+        return Response(result, status=status.HTTP_200_OK)
 
+class DeleteProductAPIView(generics.DestroyAPIView):
+    serializer_class = ProductsSerializer
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, *args, **kwargs):
+        product_id = self.kwargs.get("product_id")
+        product = get_object_or_404(Products, id=product_id)
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 class PermissionToCommentAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -110,6 +135,26 @@ class PermissionToCommentAPIView(APIView):
 
         return Response({"message": False}, status=status.HTTP_403_FORBIDDEN)
 
+class UpdateCategoryAPIView(generics.UpdateAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+    def put(self, request, *args, **kwargs):
+        category_id = self.kwargs.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        serializer = self.serializer_class(category, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        result = {"category": serializer.data}
+        return Response(result, status=status.HTTP_200_OK)
+
+class DeleteCategoryAPIView(generics.DestroyAPIView):
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+    def delete(self, request, *args, **kwargs):
+        category_id = self.kwargs.get("category_id")
+        category = get_object_or_404(Category, id=category_id)
+        category.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class GetOrderHistoryAPIView(APIView):
     permission_classes = [IsAuthenticated]

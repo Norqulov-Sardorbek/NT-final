@@ -1,7 +1,4 @@
-import requests
 from rest_framework import serializers
-from django.contrib.auth import get_user_model
-from decouple import config
 from .models import *
 from rest_framework.serializers import Serializer, IntegerField
 User = get_user_model()
@@ -34,7 +31,7 @@ class CommentProductSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'gender', 'name', 'product_count']
+        fields = ['id',  'name', 'product_count']
 
 
 
